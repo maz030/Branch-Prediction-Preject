@@ -1,0 +1,14 @@
+#!/bin/bash
+bp=$1
+declare -i total=0
+declare -i incorrect=0
+for name in int_1.bz2 int_2.bz2 fp_1.bz2 fp_2.bz2 mm_1.bz2 mm_2.bz2
+do
+	t=`bunzip2 -kc ../traces/$name | ./predictor $1 | awk '{print $2}'` 
+	total=$total+`echo $t | awk '{print $1}'`
+	incorrect=$incorrect+`echo $t | awk '{print $2}'`
+done
+echo Result for $1 on 6 tests:
+echo Total Branches: $total
+echo Mispredict: $incorrect
+echo MisRate: `echo "$incorrect $total" | awk '{printf "%.4f \n", $1/$2}'`
